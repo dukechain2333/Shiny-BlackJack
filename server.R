@@ -8,21 +8,42 @@
 #
 
 library(shiny)
+source("strategies.R")
 
 # Define server logic required to draw a histogram
 function(input, output, session) {
 
-  output$distPlot <- renderPlot({
-
-    # generate bins based on input$bins from ui.R
-    x <- faithful[, 2]
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-    # draw the histogram with the specified number of bins
-    hist(x, breaks = bins, col = 'darkgray', border = 'white',
-         xlab = 'Waiting time to next eruption (in mins)',
-         main = 'Histogram of waiting times')
-
+  observeEvent(input$restart, {
+    session$reload()
   })
+
+  # Initialize deck
+  deck <- sample(rep(1:13, 4), replace = FALSE)
+
+  # Deal two cards to each player
+  hands <- list(me_player = deck[1:2], opponent = deck[3:4])
+  deck <- deck[-c(1:4)]
+
+  output$me_player <- insertUI(
+    selector = "#yourHand",
+    ui = lapply(hands$me_player, function(card) {
+      tags$div(
+        style = "margin: 1vh; border-color: black; border-style: solid; display: flex; justify-content: center; align-items: center; height: 10vh; width: 5vh;",
+        id = paste0("me_player", card),
+        tags$p(card)
+      )
+    })
+  )
+  output$opponent <- insertUI(
+    selector = "#opponentHand",
+    ui = lapply(hands$opponent, function(card) {
+      tags$div(
+        style = "margin: 1vh; border-color: black; border-style: solid; display: flex; justify-content: center; align-items: center; height: 10vh; width: 5vh;",
+        id = paste0("opponent", card),
+        tags$p(card)
+      )
+    })
+  )
+
 
 }
