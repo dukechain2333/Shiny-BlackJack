@@ -41,7 +41,7 @@ fluidPage(
       br(),
       br(),
       actionButton("nextRound", "Next Round", width = "100%"),
-      selectInput("hard-select", h3("Select Difficulty"),
+      selectInput("hardSelect", h3("Select Difficulty"),
                   choices = list("I want to win" = 1,
                                  "Test my luck" = 2),
                   selected = 1),

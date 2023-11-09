@@ -24,4 +24,19 @@ hard_play <- function(hands) {
   return(play)
 }
 
+easy_play <- function(hands) {
+
+  # Calculate the total of each hand
+  opponent_total <- sum(hands$opponent)
+
+  # Decide whether to hit or stand based on the conditions
+  if (opponent_total < 17) {
+    play <- 'H'
+  } else {
+    play <- 'S'
+  }
+
+  return(play)
+}
+
 

@@ -13,7 +13,7 @@ source("strategies.R")
 # Define server logic required to play Black Jack
 function(input, output, session) {
 
-  # Initialize scores
+  # Initialize variables
   playerScore <- 0
   opponentScore <- 0
   playerWinTimes <- 0
@@ -24,6 +24,7 @@ function(input, output, session) {
   playingFlags <- reactiveValues(playerPlayingFlag = TRUE, opponentPlayingFlag = FALSE)
 
 
+  # only check if player busts
   check_bust_winner <- function() {
     if (playerScore > 21 && opponentScore <= 21) {
       playerStatus <<- "Bust"
@@ -55,12 +56,9 @@ function(input, output, session) {
         playerDrawTimes
       })
     }
-    # else {
-    #   # if (!hitFlags$playerHitFlag & !hitFlags$opponentHitFlag) {
-    #   # }
-    # }
   }
 
+  # Deal cards to players at begining of each round
   first_time_deal <- function() {
     hands <<- list(me_player = deck[1:2], opponent = deck[3:4])
     deck <<- deck[-c(1:4)]
@@ -94,6 +92,7 @@ function(input, output, session) {
     check_bust_winner()
   }
 
+  # Reset game
   reset_game <- function() {
     # Remove all cards from UI
     removeUI(selector = ".card", multiple = TRUE)
@@ -126,14 +125,17 @@ function(input, output, session) {
     })
   }
 
+  # actions when player choose to restart
   observeEvent(input$restart, {
     session$reload()
   })
 
+  # actions when player choose to start a new round
   observeEvent(input$nextRound, {
     reset_game()
   })
 
+  # actions when player choose to hit
   observeEvent(input$hit, {
     if (hitFlags$playerHitFlag) {
       # Deal a card to player
@@ -169,6 +171,7 @@ function(input, output, session) {
     }
   })
 
+  # actions when player choose to stand
   observeEvent(input$stand, {
     hitFlags$playerHitFlag <<- FALSE
     playingFlags$playerPlayingFlag <<- FALSE
@@ -178,7 +181,7 @@ function(input, output, session) {
   # Opponent Behavior
   observe({
     while (playingFlags$opponentPlayingFlag == TRUE) {
-      decision <- hard_play(hands)
+      decision <- if (input$hardSelect == 1) easy_play(hands) else hard_play(hands)
       if (decision == "S") {
         hitFlags$opponentHitFlag <<- FALSE
         playingFlags$opponentPlayingFlag <<- FALSE
@@ -220,7 +223,7 @@ function(input, output, session) {
     }
   })
 
-  # Check normal winner
+  # Check winner in normal circumstances
   observe({
     if (hitFlags$playerHitFlag == FALSE & hitFlags$opponentHitFlag == FALSE) {
       if (playerScore > opponentScore && playerScore <= 21) {
