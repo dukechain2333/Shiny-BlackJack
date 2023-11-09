@@ -45,7 +45,6 @@ fluidPage(
                   choices = list("I want to win" = 1,
                                  "Test my luck" = 2),
                   selected = 1),
-      p("Remember to click \"Restart Game\" after changing difficulty!"),
       h3("Player Controls"),
       actionButton("hit", "Hit", width = "100%"),
       br(),
