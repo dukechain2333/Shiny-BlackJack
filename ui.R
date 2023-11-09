@@ -27,11 +27,9 @@ fluidPage(
   # Application title
   titlePanel("Welcome to Black Jack!"),
 
-  # Sidebar with a slider input for number of bins
   sidebarLayout(
     sidebarPanel(
       h2("Introduction"),
-      p("Blackjack is a popular card game where the primary goal is to beat the dealer's hand without exceeding a total card value of 21"),
       p("This app replicates a simplified version of the game Blackjack. In this version, you will play against another player.
       All players start with two cards from the deck and then take turns making decisions. For each turn, you can choose \"hit\" (take a card) or \"stand\" (don\'t take a card).
       You \"bust\" if your card total goes above 21. The game ends when either all cards are dealt, all players have taken a stand in one round, or all players have gone bust.
@@ -42,7 +40,6 @@ fluidPage(
       actionButton("restart", "Restart Game", width = "100%"),
       br(),
       br(),
-      p("Only click after a game has ended! Or it will not work!"),
       actionButton("nextRound", "Next Round", width = "100%"),
       selectInput("hard-select", h3("Select Difficulty"),
                   choices = list("I want to win" = 1,
@@ -72,6 +69,10 @@ fluidPage(
                verbatimTextOutput("opponentScore")
         ),
         column(width = 2,
+               h3("Status: "),
+               verbatimTextOutput("playerStatus")
+        ),
+        column(width = 2,
                h3("Win: "),
                verbatimTextOutput("playerWinTimes")
         ),
@@ -82,10 +83,6 @@ fluidPage(
         column(width = 2,
                h3("Draw: "),
                verbatimTextOutput("playerDrawTimes")
-        ),
-        column(width = 2,
-               h3("Status: "),
-               verbatimTextOutput("playerStatus")
         )
       ),
       column(width = 12,
